@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} Hello TwigController!
+{% endblock %}
+
+{% block stylesheets %}
+ <link rel="stylesheet" href=" {{ asset('css/style.css') }} ">
+{% endblock %}
+
+{% block body %}
+
+   <h2>Twig: tableaux et objets</h2>
+
+    <h3>Tableaux</h3>
+    <p> Bonjour {{ contact.firstname }} {{ contact.lastname }} (<small> {{ contact['email'] }} </small>) </p>
+
+    <h3>Objets</h3>
+    <dl>
+        <dt>Nom</dt>
+        <dd> {{ object_contact.lastname }} </dd>
+        <dt>Prenom</dt>
+        <dd> {{ object_contact.firstname }} </dd>
+        <dt> Type du contact </dt>
+        <dd>
+            {{ object_contact.company ? 'Entreprise' : 'Client' }}
+        </dd>
+    </dl>
+
+    <h3>Asset</h3>
+    <img src="{{ asset('images/batman.webp') }}" alt="logo batman">
+
+    <h3>Include</h3>
+    {% set message = "Hello World" %}
+
+    {{ include('twig/_address.html.twig') }}
+
+{% endblock %}
