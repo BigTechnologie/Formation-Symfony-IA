@@ -1,0 +1,12 @@
+{% extends 'admin/admin.html.twig' %}
+
+{% block title "Livre : " ~ livre.title %}
+
+{% block body %}
+   <h1> {{ livre.title }} </h1>
+
+    <p>
+        {{ form(form) }}
+    </p>
+
+{% endblock %}

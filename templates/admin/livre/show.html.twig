@@ -1,0 +1,18 @@
+{% extends 'admin/admin.html.twig' %}
+
+{% block title "Livre : " ~ livre.title %}
+
+{% block body %}
+    <h1> {{ livre.title }} </h1>
+
+    <p>
+        {{ livre.summary | nl2br }}
+    </p>
+
+    {% if livre.coverImage %}
+        <img src="{{ livre.coverImage }}" alt="Couverture de {{ livre.title }}" style="max-width: 400px; width: 100%; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); display: block; margin-left: auto; margin-right: auto;">
+    {% else %}
+        <p>Aucune image disponible</p>
+    {% endif %}
+
+{% endblock %}

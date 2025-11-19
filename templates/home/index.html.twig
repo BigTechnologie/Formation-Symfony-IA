@@ -21,6 +21,7 @@
                         {{ livre.summary|slice(0, 100) }}{% if livre.summary|length > 100 %}...{% endif %}
                         <small> {{ livre.createdAt|date("d-m-Y") }} </small>
                         </p>
+                        <a href="{{ path('admin.livre.show', {id: livre.id, slug: livre.slug|lower|replace({'\'': '-', ' ': '-'})}) }}" class="btn btn-outline-primary mt-auto">Lire la suite</a>
                     </div>
                 </article>
             </div>

@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\LivreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
+//#[UniqueEntity(fields: ['title', 'slug'], message: 'ce champ doit être unique')]
+#[UniqueEntity('slug')]
 class Livre
 {
     #[ORM\Id]
@@ -15,10 +18,13 @@ class Livre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    #[Assert\Length(min: 4)]
+    private ?string $title = '';
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    #[Assert\Length(min: 4)]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*/', message: 'Slug invalide')]
+    private ?string $slug = '';
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $author = null;
@@ -33,22 +39,22 @@ class Livre
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $genre = null;
+    private ?string $genre = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $summary = null;
+    private ?string $summary = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $publisher = null;
+    private ?string $publisher = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $language = null;
+    private ?string $language = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $edition = null;
+    private ?string $edition = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $coverImage = null;
+    private ?string $coverImage = '';
 
     public function getId(): ?int
     {
