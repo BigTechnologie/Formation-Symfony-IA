@@ -5,15 +5,30 @@ namespace App\Repository;
 use App\Entity\Livre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Livre>
  */
 class LivreRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Livre::class);
+    }
+
+    public function paginatelivres(int $page): PaginationInterface
+    {
+        return $this->paginator->paginate(
+            $this->createQueryBuilder('l')->leftJoin('l.category', 'c')->select('l', 'c'),
+            $page,
+            4,
+            options: [
+                'distinct' => true,
+                'sortFieldAllowList' => ['l.id', 'l.title']
+            ]
+        );
     }
 
     public function structureGenerale()
@@ -90,6 +105,89 @@ class LivreRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    // TP5 : Récupère tous les livres ainsi que leur Categorie associée
+    public function findRelatedBooksAndCategory(): array 
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.category', 'c')
+            ->addSelect('c')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    // TP6: Récupère tous les livres appartenant à une catégorie spécifique (Trouver tous les livres d'une catégorie donnée) => id en parametre.
+    public function findByCategorie(int $categorieId): array
+    {
+        $qb = $this->createQueryBuilder('l');
+        $qb->join('l.category', 'c');
+        $qb->andWhere('c.id = :id')
+            ->setParameter('id', $categorieId);
+        return $qb->getQuery()->getResult();
+    }
+
+    // TP7: Compter le nombre total de livres dans chaque catégorie.
+    public function countLivresParCategorie(): array 
+    {
+        $qb = $this->createQueryBuilder('l');
+        $qb->select('c.name AS categorie, COUNT(l.id) AS nbLivres');
+        $qb->join('l.category', 'c');
+        $qb->groupBy('c.id');
+
+        return $qb->getQuery()->getResult();
+
+    }
+
+    // TP8 : Recherche de livres selon plusieurs critères optionnels : le titre (ou une partie du tire). La catégorieId
+    public function search(?string $title = null, ?int $catagorieId = null): array
+    {
+        $qb = $this->createQueryBuilder('l');
+
+        if($title) {
+            $qb->andWhere('l.title LIKE :title')
+                ->setParameter('title', "%$title%");
+        }
+
+        if($catagorieId) {
+            $qb->join('l.category', 'c')
+                ->andWhere('c.id = :id')
+                ->setParameter('id', $catagorieId);
+        }
+
+        return $qb->orderBy('l.publicationYear', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+    } 
+
+    // TP9 : Trouver les livres d’un author (User). Recherche avancée de livres avec plusieurs critères facultatifs : par titre; par catégorieId; par auteur
+    public function searchPlus(?string $title = null, ?int $categorieId = null, ?string $author = null): array 
+    {
+        $qb = $this->createQueryBuilder(alias: 'l');
+         if($title) {
+            $qb->andWhere('l.title LIKE :title')
+                ->setParameter('title', "%$title%");
+        }
+  
+        if($categorieId) {
+            $qb->join('l.category', 'c')
+                ->andWhere('c.id = :id')
+                ->setParameter('id', $categorieId);
+        }
+
+        if($author) {
+            $qb->andWhere('l.author = :author')
+                ->setParameter('author', $author);
+        }
+
+         return $qb->orderBy('l.publicationYear', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+
+    }
+ 
 
 
 

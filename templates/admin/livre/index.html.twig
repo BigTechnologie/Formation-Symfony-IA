@@ -11,15 +11,21 @@
      <table class="table">
         <thead>
             <tr>
-                <th>Titre</th>
-                <th>Actions</th>
+                <th> {{ knp_pagination_sortable(livres, 'ID', 'l.id') }} </th>
+                <th> {{ knp_pagination_sortable(livres, 'Titre', 'l.title') }} </th>
+                <th>Catégorie</th>
+                <th style="width: 200px">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for livre in livres %}
             <tr>
+                <td> {{ livre.id }} </td>
                 <td>
                      <a href="{{ path('admin.livre.show', {id: livre.id, slug: livre.slug|lower|replace({'\'': '-', ' ': '-'})}) }}"> {{ livre.title }} </a>
+                </td>
+                <td>
+                    {{ livre.category.name | default('') }}
                 </td>
                
             </td>
@@ -38,7 +44,7 @@
         </tbody>
     </table>
             
-           
+    {{ knp_pagination_render(livres) }} 
                 
            
    

@@ -18,11 +18,12 @@ class CategoryController extends AbstractController
     #[Route(name: 'index')]
     public function index(CategoryRepository $repository)
     {
+        $categories = $repository->findAllWithCount();
+        dd($categories);
         return $this->render('admin/category/index.html.twig', [
-            'categories' => $repository->findAll()
+            'categories' => $categories
         ]);
     }
-
 
     #[Route('/create', name: 'create')]
     public function create(Request $request, EntityManagerInterface $em)

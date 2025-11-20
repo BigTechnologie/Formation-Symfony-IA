@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de contact{% endblock %}
+
+{% block body %}
+
+<div class="d-flex align-items-center justify-content-center vh-100">
+   <div class="col-md-6">
+        <div class="card" style="background-color: #F1F1F1;">
+            <div class="card-body">
+                {% for label, messages in app.flashes %}
+                    <div class="alert alert-{{ label }} fade show" role="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <h1>Contactez-nous</h1>
+                {{ form_start(form, {'attr' : {'autocomplet': 'off'}}) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+   </div>
+</div>
+
+{% endblock %}

@@ -17,7 +17,7 @@
         {% for category in categories %}
         <tr>
                 
-            <td>{{ category.name }}</td> 
+            <td>{{ category.category.name }}</td> 
             <td>
                 <div class="d-flex gap-1">
                     <a class="btn btn-primary btn-sm" href="{{ path('admin.category.edit', {id: category.id}) }}">Editer</a>

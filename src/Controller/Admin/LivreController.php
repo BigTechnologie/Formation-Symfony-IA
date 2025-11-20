@@ -18,9 +18,12 @@ final class LivreController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(Request $request, LivreRepository $repository): Response
     {
-        //$livres = $repository->findWithPublicationYearLowerThan(2023);
+        //$livres = $repository->searchPlus(title: "Les Ombres du Passé");
         //dd($livres);
-        $livres = $repository->findAll();
+        //$livres = $repository->findAll();
+        //$livres = $repository->findRelatedBooksAndCategory();
+        $page = $request->query->getInt('page', 1);
+        $livres = $repository->paginatelivres($page);
         return $this->render('admin/livre/index.html.twig', [
             'livres' => $livres,
         ]);

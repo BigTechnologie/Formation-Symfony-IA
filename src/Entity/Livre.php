@@ -56,6 +56,9 @@ class Livre
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $coverImage = '';
 
+    #[ORM\ManyToOne(inversedBy: 'livres')]
+    private ?Category $category = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -201,6 +204,18 @@ class Livre
     public function setCoverImage(?string $coverImage): static
     {
         $this->coverImage = $coverImage;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

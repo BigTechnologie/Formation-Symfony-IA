@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Livre;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
@@ -24,6 +26,12 @@ class LivreType extends AbstractType
                 'empty_data' => ''
             ])
             ->add('slug', TextType::class, [
+                'required' => false
+            ])
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'placeholder' => '----- Choisir une catégorie -----',
+                'choice_label' => 'name',
                 'required' => false
             ])
             ->add('author', TextType::class, [
