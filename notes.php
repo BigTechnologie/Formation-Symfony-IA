@@ -23,5 +23,12 @@ Dans Category
 #[ORM\OneToMany(mappedBy 'category', targetEntity: livre:class)]
 private  Collection  $livres; // Collection de livres
 
+// Partie Ap
+1- Les services
+2- Security
+3- Voter
+4- Internationalisation
+5- Performance
+
 
 */

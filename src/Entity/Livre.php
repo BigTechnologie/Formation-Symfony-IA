@@ -7,8 +7,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
-//#[UniqueEntity(fields: ['title', 'slug'], message: 'ce champ doit être unique')]
+#[UniqueEntity('title', message: 'Le titre doit être unique')]
 #[UniqueEntity('slug')]
 class Livre
 {
@@ -18,18 +19,19 @@ class Livre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Length(min: 4)]
+    #[Assert\Length(min: 5)]
+    #[BanWord]
     private ?string $title = '';
 
     #[ORM\Column(length: 255)]
-    #[Assert\Length(min: 4)]
-    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*/', message: 'Slug invalide')]
+    #[Assert\Length(min: 5)]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*/', message: 'Invalid slug')]
     private ?string $slug = '';
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $author = null;
+    #[ORM\Column(length: 255)]
+    private ?string $author = '';
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?int $publicationYear = null;
 
     #[ORM\Column]
@@ -42,12 +44,13 @@ class Livre
     private ?string $genre = '';
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(min: 5)]
     private ?string $summary = '';
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $publisher = '';
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $language = '';
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -58,6 +61,9 @@ class Livre
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
     private ?Category $category = null;
+
+    #[ORM\ManyToOne(inversedBy: 'livres')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -93,7 +99,7 @@ class Livre
         return $this->author;
     }
 
-    public function setAuthor(?string $author): static
+    public function setAuthor(string $author): static
     {
         $this->author = $author;
 
@@ -105,7 +111,7 @@ class Livre
         return $this->publicationYear;
     }
 
-    public function setPublicationYear(?int $publicationYear): static
+    public function setPublicationYear(int $publicationYear): static
     {
         $this->publicationYear = $publicationYear;
 
@@ -165,7 +171,7 @@ class Livre
         return $this->publisher;
     }
 
-    public function setPublisher(?string $publisher): static
+    public function setPublisher(string $publisher): static
     {
         $this->publisher = $publisher;
 
@@ -177,7 +183,7 @@ class Livre
         return $this->language;
     }
 
-    public function setLanguage(?string $language): static
+    public function setLanguage(string $language): static
     {
         $this->language = $language;
 
@@ -216,6 +222,18 @@ class Livre
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
