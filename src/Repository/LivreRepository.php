@@ -18,14 +18,20 @@ class LivreRepository extends ServiceEntityRepository
         parent::__construct($registry, Livre::class);
     }
 
-    public function paginatelivres(int $page): PaginationInterface
+    public function paginatelivres(int $page, ?int $userId): PaginationInterface
     {
+        $builder = $this->createQueryBuilder('l')->leftJoin('l.category', 'c')->select('l', 'c');
+        if($userId) {
+            $builder = $builder->andWhere('l.user = :user')
+                ->setParameter('user', $userId);
+        }
+
         return $this->paginator->paginate(
-            $this->createQueryBuilder('l')->leftJoin('l.category', 'c')->select('l', 'c'),
+            $builder,
             $page,
-            4,
+            5,
             options: [
-                'distinct' => true,
+                'distinct' => false,
                 'sortFieldAllowList' => ['l.id', 'l.title']
             ]
         );

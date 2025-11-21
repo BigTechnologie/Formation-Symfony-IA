@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Form\LivreType;
 use App\Repository\LivreRepository;
+use App\Security\Voter\LivreVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,14 +20,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class LivreController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(Request $request, LivreRepository $repository): Response
+    public function index(Request $request, LivreRepository $repository, Security $security): Response
     {
-        //$livres = $repository->searchPlus(title: "Les Ombres du Passé");
-        //dd($livres);
-        //$livres = $repository->findAll();
-        //$livres = $repository->findRelatedBooksAndCategory();
+        $user = $security->getUser();
+        if(!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $page = $request->query->getInt('page', 1);
-        $livres = $repository->paginatelivres($page);
+        $userId = $security->getUser()->getId();
+
+        $canListAll = $security->isGranted(LivreVoter::LIST_ALL);
+
+        $livres = $repository->paginatelivres($page, $canListAll ? null : $userId);
         return $this->render('admin/livre/index.html.twig', [
             'livres' => $livres,
         ]);
@@ -50,6 +57,7 @@ final class LivreController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => requirement::DIGITS])]
+    #[isGranted(LivreVoter::EDIT, subject: 'livre', message: "Accès refusé", statusCode: 404)]
     public function edit(Request $request, EntityManagerInterface $em, Livre $livre): Response
     {
         $form = $this->createForm(LivreType::class, $livre);

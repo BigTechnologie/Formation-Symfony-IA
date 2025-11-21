@@ -20,7 +20,6 @@ class Livre
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5)]
-    #[BanWord]
     private ?string $title = '';
 
     #[ORM\Column(length: 255)]

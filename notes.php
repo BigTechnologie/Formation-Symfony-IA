@@ -24,9 +24,9 @@ Dans Category
 private  Collection  $livres; // Collection de livres
 
 // Partie Ap
-1- Les services
-2- Security
-3- Voter
+1- Les services => OK
+2- Security => OK
+3- Voter =>
 4- Internationalisation
 5- Performance
 
