@@ -10,7 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Security\Voter\GenericVoter;
 
 
 #[Route("/admin/category", name: 'admin.category.')]
@@ -45,8 +47,16 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', name: 'edit', requirements: ['id' => Requirement::DIGITS], methods: ['GET', 'POST'])]
+    //#[isGranted(GenericVoter::EDIT, subject: 'category', message: "Accès refusé pour la catégorie", statusCode: 404)]
     public function edit(Category $category, Request $request, EntityManagerInterface $em)
     {
+        try {
+            $this->denyAccessUnlessGranted(GenericVoter::EDIT, $category);
+        } catch (AccessDeniedException $e) {
+            $this->addFlash('error', 'Vous n\'avez pas la permission de modifier cette catégorie.');
+            return $this->redirectToRoute('home');
+        }
+
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

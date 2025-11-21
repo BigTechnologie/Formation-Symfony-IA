@@ -4,6 +4,11 @@
 
 {% block body %}
 
+<h1> {{ 'Welcome' | trans }} </h1>
+
+<p>
+    {{ 'welcome_1' | trans({name: 'Bruno'}) }}
+</p>
 
 <div class="container mt-4">
     <h1 class="text-center mb-4"> Nos Livres </h1>

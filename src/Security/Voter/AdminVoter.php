@@ -16,10 +16,13 @@ final class AdminVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
+       
         if (!$user instanceof UserInterface) {
             return false;
         }
-        return in_array('ROLE_ADMIN', $user->getRoles());  
+
+        $allowedRoles = ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_DG'];
+        return count(array_intersect($allowedRoles, $user->getRoles())) > 0;   
+        
     }
 }

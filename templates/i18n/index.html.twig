@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello I18nController!{% endblock %}
+
+{% block body %}
+
+    <h2>Traduction</h2>
+        <div class="mb-3">
+            <a href=" {{ path('i18n_index', {_locale: 'fr'}) }} ">Français</a> - 
+            <a href=" {{ path('i18n_index', {_locale: 'en'}) }} ">English</a>
+        </div>
+
+        <p> {{ message }} </p>
+
+{% endblock %}

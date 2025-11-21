@@ -4,7 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Form\LivreType;
 use App\Repository\LivreRepository;
-use App\Security\Voter\LivreVoter;
+//use App\Security\Voter\LivreVoter;
+use App\Security\Voter\GenericVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -30,7 +31,7 @@ final class LivreController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $userId = $security->getUser()->getId();
 
-        $canListAll = $security->isGranted(LivreVoter::LIST_ALL);
+        $canListAll = $security->isGranted(GenericVoter::LIST_ALL);
 
         $livres = $repository->paginatelivres($page, $canListAll ? null : $userId);
         return $this->render('admin/livre/index.html.twig', [
@@ -57,7 +58,7 @@ final class LivreController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => requirement::DIGITS])]
-    #[isGranted(LivreVoter::EDIT, subject: 'livre', message: "Accès refusé", statusCode: 404)]
+    #[isGranted(GenericVoter::EDIT, subject: 'livre', message: "Accès refusé", statusCode: 404)]
     public function edit(Request $request, EntityManagerInterface $em, Livre $livre): Response
     {
         $form = $this->createForm(LivreType::class, $livre);

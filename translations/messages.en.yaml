@@ -1,0 +1,4 @@
+hello: Hello 
+message: 
+  welcome: Welcome on board 
+  hello: Hi %name%, how are you ? 
