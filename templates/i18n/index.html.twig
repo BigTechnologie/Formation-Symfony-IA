@@ -11,5 +11,11 @@
         </div>
 
         <p> {{ message }} </p>
+        
+        <p class="lead"> {{ 'message.welcome'|trans }} </p>
+
+        <p> {{ 'message.hello'|trans({'%name%': 'Alexandre et Juliane'}) }} </p>
+
+        {% trans with {'%name%': 'Sevan'} into 'fr' %}message.hello{% endtrans %}
 
 {% endblock %}

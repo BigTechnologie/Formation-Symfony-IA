@@ -18,4 +18,17 @@ final class I18nController extends AbstractController
             'message' => $message,
         ]);
     }
+
+    #[Route([
+        'en' => '/domain',
+        'fr' => '/domaine'
+    ], name: 'domain')]
+    public function domain(): Response
+    {
+      
+        return $this->render('i18n/domain.html.twig', [
+           
+        ]);
+    }
+
 }

@@ -4,7 +4,7 @@ Password: 'Mot de passe'
 'Agree terms': 'Accepter les conditions'
 Welcome: Bienvenue
 welcome_1: 'Bonjour name'
-message.welcome: Bienvenue sur Application Symfony
-message.hello: Bonjour %name%, comment allez vous ?
+message.welcome: 'Bienvenue sur Application Symfony'
+message.hello: 'Bonjour %name%, comment allez vous ?'
 hello: Salut
 Register: "S'inscrire"
