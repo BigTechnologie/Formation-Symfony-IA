@@ -7,10 +7,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploadableField;
+use Symfony\Component\HttpFoundation\File\File; //
+use Vich\UploaderBundle\Mapping\Annotation as Vich; //
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
 #[UniqueEntity('title', message: 'Le titre doit être unique')]
 #[UniqueEntity('slug')]
+#[Vich\Uploadable()]
 class Livre
 {
     #[ORM\Id]
@@ -63,6 +67,12 @@ class Livre
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $thumbnail = null;
+    #[Vich\UploadableField(mapping: 'livres', fileNameProperty: 'thumbnail')]
+    #[Assert\Image()]
+    private ?File $thumbnailFile = null;
 
     public function getId(): ?int
     {
@@ -236,4 +246,32 @@ class Livre
 
         return $this;
     }
+
+    public function getThumbnail(): ?string
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(?string $thumbnail): static
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    public function setThumbnailFile(?File $thumbnailFile = null): void
+    {
+        $this->thumbnailFile = $thumbnailFile;
+
+        if ($thumbnailFile !== null) {
+            // Obligatoire pour que Vich détecte un changement
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getThumbnailFile(): ?File
+    {
+        return $this->thumbnailFile;
+    }
+
 }

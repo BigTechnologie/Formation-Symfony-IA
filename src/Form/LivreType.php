@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class LivreType extends AbstractType
 {
@@ -27,6 +28,10 @@ class LivreType extends AbstractType
             ])
             ->add('slug', TextType::class, [
                 'required' => false
+            ])
+            ->add('thumbnailFile', FileType::class, [
+                'required' => false,
+                'empty_data' => ''
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,

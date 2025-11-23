@@ -33,11 +33,18 @@ final class HomeController extends AbstractController
         //return new Response('Bonjour ' .$request->query->get('name'));
         //return new Response('Hello Dawan');
 
-        $livres = $rep->findAll();
+        //$livres = $rep->findAll();
         //dd($livres);
+
+         // Récupère la valeur du paramètre 'q' dans l'URL (ex : /books?q=nom)
+        $searchQuery = $request->query->get('q');
+
+        // Utilise le repository avec ou sans recherche
+        $livres = $rep->findBooks($request->query->get('q'));
 
         return $this->render('home/index.html.twig', [
             'livres' => $livres,
+            'searchQuery' => $searchQuery
         ]);
     }
 

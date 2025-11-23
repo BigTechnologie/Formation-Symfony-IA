@@ -2,51 +2,50 @@
 
 {% block title "NOS LIVRES" %}
 
-{% block body %}
-    <p>David finit au bout d'une heure par s'assoupir. Il fut réveillé par le bruit d’une portière se fermant.</p>
+{% block body %}   
 
-    <p>
-        <a class="btn btn-primary btn-sm" href="{{ path('admin.livre.create') }}">Créer un Livre</a>
-    </p>
-     <table class="table">
-        <thead>
-            <tr>
-                <th> {{ knp_pagination_sortable(livres, 'ID', 'l.id') }} </th>
-                <th> {{ knp_pagination_sortable(livres, 'Titre', 'l.title') }} </th>
-                <th>Catégorie</th>
-                <th style="width: 200px">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for livre in livres %}
-            <tr>
-                <td> {{ livre.id }} </td>
-                <td>
-                     <a href="{{ path('admin.livre.show', {id: livre.id, slug: livre.slug|lower|replace({'\'': '-', ' ': '-'})}) }}"> {{ livre.title }} </a>
-                </td>
-                <td>
-                    {{ livre.category.name | default('') }}
-                </td>
-               
-            </td>
-                 <td>
-                    <div class="d-flex gap-1">
-                    <a class="btn btn-primary btn-sm" href="{{ path('admin.livre.edit', {id: livre.id}) }}" method="post">Editer</a>
 
-                    <form action="{{ path('admin.livre.delete', {id: livre.id}) }}" method="post">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                    </form>
-                </div>
-                </td>
-            </tr>
-             {% endfor %}
-        </tbody>
-    </table>
-            
-    {{ knp_pagination_render(livres) }} 
-                
-           
+<p>
+<a class="btn btn-primary btn-sm" href="{{ path('admin.livre.create') }}">Créer une recette</a>
+</p>
+<table class="table">
+<thead>
+<tr>
    
+    <th> {{ knp_pagination_sortable(livres, 'ID', 'l.id') }} </th>
+    <th> {{ knp_pagination_sortable(livres, 'Titre', 'l.title') }} </th>
+    <th>Catégorie</th>
+    <th style="width: 200px">Actions</th>
 
-{% endblock %}
+</tr>
+</thead>
+<tbody>
+{% for livre in livres %}
+<tr>
+    <td> {{ livre.id }} </td>
+    <td>
+        <a href="{{ path('admin.livre.show', {id: livre.id, slug: livre.slug|replace({'\'': '-', ' ': '-'})|lower}) }}">{{ livre.title }}</a> 
+    </td>
+    <td>{{ livre.category.name | default('') }}</td> 
+
+    <td>
+        <div class="d-flex gap-1">
+            <a class="btn btn-primary btn-sm" href="{{ path('admin.livre.edit', {id: livre.id}) }}">Editer</a>
+            <form action="{{ path('admin.livre.delete', {id: livre.id}) }}" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+            </form>
+        </div>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{{ knp_pagination_render(livres) }}
+
+
+{% endblock %}  
+
+
+
+

@@ -193,6 +193,27 @@ class LivreRepository extends ServiceEntityRepository
 
 
     }
+
+      /**
+     * @return Livre[] Returns an array of Book objects
+     */
+    public function findBooks(?string $searchQuery = null): array
+    {
+        $queryBuilder = $this->createQueryBuilder('l');
+
+        // Si une recherche est faite sur le titre ou l'auteur
+        if ($searchQuery) {
+            $likeValue = '%' . $searchQuery . '%';
+            $queryBuilder->andWhere('l.title LIKE :value OR l.author LIKE :value')
+                ->setParameter('value', $likeValue);
+        }
+
+        // Trie les résultats par id décroissant
+        return $queryBuilder
+            ->orderBy('l.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
  
 
 

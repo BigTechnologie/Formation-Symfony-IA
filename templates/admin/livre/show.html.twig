@@ -3,16 +3,59 @@
 {% block title "Livre : " ~ livre.title %}
 
 {% block body %}
-    <h1> {{ livre.title }} </h1>
 
-    <p>
-        {{ livre.summary | nl2br }}
-    </p>
+    <style>
+        .book-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    {% if livre.coverImage %}
-        <img src="{{ livre.coverImage }}" alt="Couverture de {{ livre.title }}" style="max-width: 400px; width: 100%; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); display: block; margin-left: auto; margin-right: auto;">
-    {% else %}
-        <p>Aucune image disponible</p>
-    {% endif %}
+        .book-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+        }
+
+        .book-summary {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .book-cover img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    <div class="book-container">
+        <h1 class="book-title">{{ livre.title }}</h1>
+
+        <p class="book-summary">
+            {{ livre.summary | nl2br }}
+        </p>
+
+        <div class="book-cover">
+            {% if livre.thumbnail %}
+               <img src="{{ vich_uploader_asset(livre, 'thumbnailFile') }}" alt=""> {# upload de fichier:  #}
+            {% else %}
+                <p>Aucune image disponible</p>
+            {% endif %}
+        </div>
+    </div>
 
 {% endblock %}

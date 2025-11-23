@@ -27,8 +27,7 @@ private  Collection  $livres; // Collection de livres
 1- Les services => OK
 2- Security => OK
 3- Voter => OK
-4- Internationalisation
-5- Performance
-
+4- Internationalisation => OK
+5- Performance => OK
 
 */

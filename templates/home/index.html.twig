@@ -4,36 +4,53 @@
 
 {% block body %}
 
-<h1> {{ 'Welcome' | trans }} </h1>
+    <h1> {{ 'Welcome' | trans }} </h1>
 
-<p>
-    {{ 'welcome_1' | trans({name: 'Bruno'}) }}
-</p>
+    <p>
+        {{ 'welcome_1' | trans({name: 'Bruno'}) }}
+    </p>
 
-<div class="container mt-4">
-    <h1 class="text-center mb-4"> Nos Livres </h1>
+    {# J'ai rajouté ce Formulaire de recherche en faisant passé searchQuery depuis HomeController  #}
+    <form method="get" action="{{ path('home') }}" class="mb-5">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher un livre ou un auteur"
+                value="{{ searchQuery }}">
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+    </form>
+
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
-
         {% for livre in livres %}
-
             <div class="col">
                 <article class="card h-100 shadow-sm">
-                    <img src="{{ livre.coverImage }}" class="card-img-top" alt="Couverture du livre {{ livre.title }}">
+                    {# Envoi de fichier: Ici plus simple dynamique, on va utilisé un helper qui va utliser la config. Ainsi on utilise la 
+                    fonction vich_uploader_asset(entité: livre pour nous, nom du champ qui contient notre UploadableField dans l'entité Livre) #}
+                    {% if vich_uploader_asset(livre, 'thumbnailFile') %}
+                        <img src="{{ vich_uploader_asset(livre, 'thumbnailFile') }}" class="card-img-top" alt="{{ livre.title }}">
+                    {% else %}
+                        <img src="{{ asset('images/default-cover.jpg') }}" class="card-img-top" alt="Couverture par défaut">
+                    {% endif %}
 
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title"> {{ livre.title }} </h5>
-                        <p>
-                        {{ livre.summary|slice(0, 100) }}{% if livre.summary|length > 100 %}...{% endif %}
-                        <small> {{ livre.createdAt|date("d-m-Y") }} </small>
+                        <h5 class="card-title">{{ livre.title }}</h5>
+                        <p class="card-text text-muted">
+                            {{ livre.summary|slice(0, 100) }}{% if livre.summary|length > 100 %}...{% endif %}
                         </p>
-                        <a href="{{ path('admin.livre.show', {id: livre.id, slug: livre.slug|lower|replace({'\'': '-', ' ': '-'})}) }}" class="btn btn-outline-primary mt-auto">Lire la suite</a>
+                        <p class="card-text"><small class="text-secondary">Auteur : {{ livre.author }}</small></p>
+                        <a href="{{ path('admin.livre.show', {id: livre.id, slug: livre.slug|lower|replace({'\'': '-', ' ': '-'})}) }}" 
+                           class="btn btn-outline-primary mt-auto">Lire la description</a>
                     </div>
                 </article>
             </div>
-
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    Aucun livre trouvé pour cette recherche.
+                </div>
+            </div>
         {% endfor %}
-
     </div>
-   
+
 </div>
 {% endblock %}
